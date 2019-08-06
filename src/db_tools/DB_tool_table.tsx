@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -8,6 +7,7 @@ import TableRow from '@material-ui/core/TableRow';
 import { Rnd } from 'react-rnd';
 import Box from '@material-ui/core/Box';
 import common from '@material-ui/core/colors/common';
+import { CssBaseline } from '@material-ui/core';
 
 
 interface DB_tool_table_prop{
@@ -16,8 +16,15 @@ interface DB_tool_table_prop{
 }
 
 class DB_tool_table extends React.Component<DB_tool_table_prop> {
+  rnd: Rnd;
+
+  componentDidMount(){
+    this.rnd.updatePosition({x: 10, y: 70})
+  }
+
   render(){
-    const style = {
+    const style: { [key: string]: string } = {
+      position: "fixed",
       display: "flex",
       alignItems: "center",
       justifyContent: "center",
@@ -27,6 +34,7 @@ class DB_tool_table extends React.Component<DB_tool_table_prop> {
     return (
         <Rnd
           style={style} 
+          ref={(rnd: Rnd) => { this.rnd = rnd} }
           default={{
               x: 0,
               y: 0,

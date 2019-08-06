@@ -1,16 +1,14 @@
 import * as React from 'react';
-import { createStyles, Theme, makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
 import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import { Button } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
-import { number } from 'prop-types';
 import common from '@material-ui/core/colors/common';
+import { Rnd } from 'react-rnd';
 
 interface DB_tool_input_prop{
     header_data: string[];
@@ -25,6 +23,7 @@ interface DB_tool_input_state{
 }
 
 class DB_tool_input extends React.Component<DB_tool_input_prop, DB_tool_input_state> {
+    rnd: Rnd;
     private textInputs: {[key: string]: HTMLInputElement;};
 
     constructor(props:DB_tool_input_prop) {
@@ -45,53 +44,72 @@ class DB_tool_input extends React.Component<DB_tool_input_prop, DB_tool_input_st
                 elem.focus();
             },0);
         }
+        this.rnd.updatePosition({x: 10, y: 230})
     }
 
     render(){
+        const style: { [key: string]: string } = {
+            position: "fixed",
+        };
+        const btn_style: { [key: string]: string } = {
+            top:'0',
+            textAlign: 'right'
+        };
+
         return (
-            <Box component="div" width="100%" height="100%" overflow="auto" bgcolor="background.paper">
-                <Table className='table'>
-                    <TableHead>
-                    <TableRow>
-                        <TableCell style={{
-                            backgroundColor: common.black,
-                            color: common.white
-                        }}>
-                            {this.props.header_data[0]}
-                        </TableCell>
-                        {this.props.header_data.slice(1, this.props.header_data.length).map(colume => (
-                            <TableCell align="right" 
-                                style={{
+            <Rnd default={{
+                x: 0,
+                y: 200,
+                width: 800,
+                height: 150
+              }}
+              style={style} 
+              ref={(rnd: Rnd) => { this.rnd = rnd} }
+            >
+                <Box component="div" width="100%" height="100%" overflow="auto" bgcolor="background.paper">
+                    <Table className='table'>
+                        <TableHead>
+                        <TableRow>
+                            <TableCell style={{
                                 backgroundColor: common.black,
                                 color: common.white
-                            }}>{colume}</TableCell>
-                        ))}
-                    </TableRow>
-                    </TableHead>
-                    <TableBody>
-                        <TableRow key={"TextField"}>
-                            {this.props.header_data.map(colume => (
-                                <TableCell align="right">
-                                    <TextField  inputRef={(input: HTMLInputElement) => { this.textInputs[colume] = input } } 
-                                    id={colume} type="text" value={this.props.textValues[colume]} 
-                                        onChange={this.changeText} 
-                                        onBlur={() => {
-                                            this.refocus()
-                                        }}
-                                        onClick={
-                                            this.setFocus
-                                        }
-                                        onKeyDown={(e:any) => this.keyPressAction(e)}
-                                    />
-                                </TableCell>
+                            }}>
+                                {this.props.header_data[0]}
+                            </TableCell>
+                            {this.props.header_data.slice(1, this.props.header_data.length).map(colume => (
+                                <TableCell align="right" 
+                                    style={{
+                                    backgroundColor: common.black,
+                                    color: common.white
+                                }}>{colume}</TableCell>
                             ))}
                         </TableRow>
-                    </TableBody>
-                </Table>
-                <div  className='input_btn'>
-                        <Button variant="contained" color="secondary" onClick={this.onClickDBInputBtn}>登録</Button>
-                </div>
-            </Box>
+                        </TableHead>
+                        <TableBody>
+                            <TableRow key={"TextField"}>
+                                {this.props.header_data.map(colume => (
+                                    <TableCell align="right">
+                                        <TextField  inputRef={(input: HTMLInputElement) => { this.textInputs[colume] = input } } 
+                                        id={colume} type="text" value={this.props.textValues[colume]} 
+                                            onChange={this.changeText} 
+                                            onBlur={() => {
+                                                this.refocus()
+                                            }}
+                                            onClick={
+                                                this.setFocus
+                                            }
+                                            onKeyDown={(e:any) => this.keyPressAction(e)}
+                                        />
+                                    </TableCell>
+                                ))}
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                    <div  className='input_btn'>
+                        <Button style={btn_style} variant="contained" color="secondary" onClick={this.onClickDBInputBtn}>登録</Button>
+                    </div>
+                </Box>
+            </Rnd>
         );
     }
 

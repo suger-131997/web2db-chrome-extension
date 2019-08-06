@@ -1,6 +1,5 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
-import Popup from './Popup';
 import App from './App';
 
 console.log(`'Allo 'Allo! Content script`);
@@ -15,6 +14,7 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
         const target = document.getElementsByTagName('body')[0]
         const subRoot = document.createElement('div');
         target.appendChild(subRoot)
+        //target.insertBefore(subRoot, target.firstChild)
 
         const h = ["a", "b", "c"]
         const u = ""

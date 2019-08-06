@@ -1,18 +1,8 @@
 import * as React from 'react';
 import DB_tool_header from './DB_tool_header'
-import { CssBaseline } from '@material-ui/core';
-import AppBar from '@material-ui/core/AppBar'
-import Toolbar from '@material-ui/core/Toolbar'
-import { withStyles, WithStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core/styles/createMuiTheme";
-import ArrowDownwardIcon from '@material-ui/icons/ArrowDownward';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import Typography from '@material-ui/core/Typography';
-import Menu from '@material-ui/core/Menu';
-import MenuItem from '@material-ui/core/MenuItem';
+import DB_tool_appbar from './DB_tool_appbar'
 
-interface IDBAppProps extends WithStyles<typeof styles> {
+interface IDBAppProps {
   header_data:string[];
   url:string; 
 }
@@ -26,20 +16,6 @@ interface IDBAppState {
   open: boolean,
   page:string
 }
-
-
-const styles = (theme:Theme) => ({
-  toolbar: theme.mixins.toolbar,
-  appbar_root: {
-    flexGrow: 1,
-  },
-  appbar_menuButton: {
-    marginRight: theme.spacing(2),
-  },
-  appbar_title: {
-    flexGrow: 1,
-  },
-})
 
 class App extends React.Component<IDBAppProps, IDBAppState>{
 
@@ -154,14 +130,10 @@ class App extends React.Component<IDBAppProps, IDBAppState>{
   }
 
   render(){
-    const classes = this.props.classes;
-    var menuItems:string[] = ["使い方表示"];
-    var menufuncs:Array<() => void> = [this.handleClose];
-    var partial = <div/>;
-    menuItems = ["使い方表示","URL変更"];
-    menufuncs = [this.handleClose,this.moveUrlChange]
-    partial = <div>
-                <DB_tool_header 
+    return (
+      <div>
+        <DB_tool_appbar handleDownload={this.handleDownload}/>
+        <DB_tool_header 
                   header_data={this.state.header_data} 
                   textValues={this.state.textValues} 
                   textForcus={this.state.textForcus} 
@@ -170,43 +142,6 @@ class App extends React.Component<IDBAppProps, IDBAppState>{
                   rows={this.state.rows}
                   pushDatum={this.pushDatum}
                   />
-              </div>;
-    return (
-      <div>
-        <div className={classes.appbar_root}>
-          <CssBaseline />
-          {/* <Login /> は削除 */}
-          {/* <Navbar /> は削除 */}
-          <AppBar>
-            <Toolbar>
-            <IconButton edge="start" className={classes.appbar_menuButton} color="inherit" aria-label="Menu" onClick={this.handleClick}>
-              <MenuIcon />
-            </IconButton>
-            <Menu
-              id="menu"
-              open={Boolean(this.state.anchorEl)} // 追加
-              anchorEl={this.state.anchorEl} // 追加
-              onClose={this.handleClose}
-        >
-              {menuItems.map((item, index) => (
-                <MenuItem key={item} onClick={menufuncs[index]}>
-                  {item}
-                </MenuItem>
-              ))}
-            </Menu>
-            <Typography variant="h6" className={classes.appbar_title}>
-              Web2DB
-            </Typography>
-            <a id="download" href="#" download="data.csv">
-              <IconButton onClick={this.handleDownload} aria-label="Delete">
-                <ArrowDownwardIcon fontSize="large"/>
-              </IconButton>
-            </a>
-            </Toolbar>
-          </AppBar>
-          <div className={classes.toolbar} />  {/* #1 */}
-        </div>
-        {partial}
       </div>
     );
   }
@@ -248,4 +183,4 @@ class App extends React.Component<IDBAppProps, IDBAppState>{
   }
 }
 
-export default withStyles(styles)(App);
+export default App;
