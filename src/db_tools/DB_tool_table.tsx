@@ -29,7 +29,8 @@ class DB_tool_table extends React.Component<DB_tool_table_prop> {
       alignItems: "center",
       justifyContent: "center",
       border: "solid 1px #ddd",
-      background: "#f0f0f0"
+      background: "#f0f0f0",
+      zIndex: "100"
     };
     return (
         <Rnd

@@ -23,13 +23,13 @@ interface IDBAppbarState {
 const styles = (theme:Theme) => ({
   toolbar: theme.mixins.toolbar,
   appbar_root: {
-    flexGrow: 1,
+    flexGrow: 1
   },
   appbar_menuButton: {
     marginRight: theme.spacing(2),
   },
   appbar_title: {
-    flexGrow: 1,
+    flexGrow: 1
   },
 })
 
@@ -62,11 +62,11 @@ class DB_tool_appbar extends React.Component<IDBAppbarProps, IDBAppbarState>{
     const classes = this.props.classes;
     var menuItems:string[] = ["使い方表示"];
     var menufuncs:Array<() => void> = [this.alertUse];
-
+    //<div className={classes.toolbar} />  {/* #1 */}
     return (
         <div className={classes.appbar_root}>
           <CssBaseline />
-          <AppBar>
+          <AppBar position="sticky">
             <Toolbar>
             <IconButton edge="start" className={classes.appbar_menuButton} color="inherit" aria-label="Menu" onClick={this.handleClick}>
               <MenuIcon />
@@ -83,7 +83,7 @@ class DB_tool_appbar extends React.Component<IDBAppbarProps, IDBAppbarState>{
                 </MenuItem>
               ))}
             </Menu>
-            <Typography variant="h6" className={classes.appbar_title}>
+            <Typography variant="h6" className={classes.appbar_title} color="inherit">
               Web2DB
             </Typography>
             <a id="download" href="#" download="data.csv">
@@ -93,7 +93,6 @@ class DB_tool_appbar extends React.Component<IDBAppbarProps, IDBAppbarState>{
             </a>
             </Toolbar>
           </AppBar>
-          <div className={classes.toolbar} />  {/* #1 */}
         </div>
     );
   }

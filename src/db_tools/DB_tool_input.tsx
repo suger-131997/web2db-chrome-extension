@@ -9,6 +9,7 @@ import { Button } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import common from '@material-ui/core/colors/common';
 import { Rnd } from 'react-rnd';
+import { red } from '@material-ui/core/colors';
 
 interface DB_tool_input_prop{
     header_data: string[];
@@ -30,31 +31,33 @@ class DB_tool_input extends React.Component<DB_tool_input_prop, DB_tool_input_st
         super(props);
         this.changeText = this.changeText.bind(this)
         this.onClickDBInputBtn = this.onClickDBInputBtn.bind(this)
-        this.refocus = this.refocus.bind(this)
         this.setFocus = this.setFocus.bind(this)
         this.nextFocus = this.nextFocus.bind(this)
         this.keyPressAction = this.keyPressAction.bind(this)
+        this.createTextField = this.createTextField.bind(this)
         this.textInputs = {};
     }
 
     componentDidMount() {
-        const elem = this.textInputs[this.props.textForcus];
-        if(elem){
-            setTimeout(function(){
-                elem.focus();
-            },0);
-        }
+        // const elem = this.textInputs[this.props.textForcus];
+        // if(elem){
+        //     setTimeout(function(){
+        //         elem.focus();
+        //     },0);
+        // }
         this.rnd.updatePosition({x: 10, y: 230})
     }
 
     render(){
         const style: { [key: string]: string } = {
             position: "fixed",
+            zIndex: "100"
         };
         const btn_style: { [key: string]: string } = {
             top:'0',
             textAlign: 'right'
         };
+        
 
         return (
             <Rnd default={{
@@ -87,21 +90,7 @@ class DB_tool_input extends React.Component<DB_tool_input_prop, DB_tool_input_st
                         </TableHead>
                         <TableBody>
                             <TableRow key={"TextField"}>
-                                {this.props.header_data.map(colume => (
-                                    <TableCell align="right">
-                                        <TextField  inputRef={(input: HTMLInputElement) => { this.textInputs[colume] = input } } 
-                                        id={colume} type="text" value={this.props.textValues[colume]} 
-                                            onChange={this.changeText} 
-                                            onBlur={() => {
-                                                this.refocus()
-                                            }}
-                                            onClick={
-                                                this.setFocus
-                                            }
-                                            onKeyDown={(e:any) => this.keyPressAction(e)}
-                                        />
-                                    </TableCell>
-                                ))}
+                                {this.props.header_data.map(colume => this.createTextField(colume))}
                             </TableRow>
                         </TableBody>
                     </Table>
@@ -113,11 +102,40 @@ class DB_tool_input extends React.Component<DB_tool_input_prop, DB_tool_input_st
         );
     }
 
+    private createTextField(colume:string){
+        var color = "black";
+        if (colume == this.props.textForcus){
+            color = "blue"
+        }
+        const textfield_style: { [key: string]: string } = {
+            color: color
+        };
+        return (
+            <TableCell align="right">
+                <TextField  inputRef={(input: HTMLInputElement) => { this.textInputs[colume] = input } } 
+                id={colume} type="text" value={this.props.textValues[colume]} 
+                    onChange={this.changeText} 
+                    onClick={(e:any) => this.setFocus(e)}
+                    onKeyDown={(e:any) => this.keyPressAction(e)}
+                    InputProps={{
+                        style: textfield_style
+                    }}
+                />
+            </TableCell>
+        );
+    }
+
     private setFocus(e:any){
+        console.log(e.target.id)
         this.props.chengeForcus(e.target.id)
-        const elem = this.textInputs[e.target.id];
+        const elem = this.textInputs[this.props.textForcus];
         setTimeout(function(){
             elem.focus();
+        },0);
+
+        const elem2 = this.textInputs[e.target.id];
+        setTimeout(function(){
+            elem2.focus();
         },0);
     }
 
@@ -144,14 +162,6 @@ class DB_tool_input extends React.Component<DB_tool_input_prop, DB_tool_input_st
         }
         this.props.chengeForcus(this.props.header_data[next])
         const elem = this.textInputs[this.props.header_data[next]];
-        setTimeout(function(){
-            elem.focus();
-        },0);
-    }
-
-    private refocus(){
-        // console.log(this.props.textForcus)
-        const elem = this.textInputs[this.props.textForcus];
         setTimeout(function(){
             elem.focus();
         },0);
