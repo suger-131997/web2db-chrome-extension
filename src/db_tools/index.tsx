@@ -1,22 +1,46 @@
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import App from './App';
+import CssBaseline from '@material-ui/core/CssBaseline';
 
-console.log(`'Allo 'Allo! Content script`);
+// console.log(`'Allo 'Allo! Content script`);
+
+var subRoot = null;
+
+function sendRow(row: {[key: string]: string;}){
+    chrome.runtime.sendMessage( {
+            command: 'addRow',
+            row: row
+        },
+        function(msg: string) {
+            // console.log(msg);
+        });
+}
+function sendHeader(header:string[]){
+    chrome.runtime.sendMessage( {
+            command: 'setHeader',
+            header: header
+        },
+        function(msg: string) {
+            // console.log(msg);
+        });
+}
 
 chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
-    if (msg.command && (msg.command === 'change_title')) {
-        var src = document.getElementsByTagName('title')[0].innerHTML;
-        var dst = msg.title;
-        document.getElementsByTagName('title')[0].innerHTML = dst;
+    if (msg.command && (msg.command === 'insert_tools')) {
         const target = document.getElementsByTagName('body')[0]
-        const subRoot = document.createElement('div');
-        //target.appendChild(subRoot)
+        subRoot = document.createElement('div');
         target.insertBefore(subRoot, target.firstChild)
-
-        const h = ["a", "b", "c", "d"]
-        const u = ""
-        ReactDOM.render(<App header_data={h} url={u}/>, subRoot);
-        sendResponse('the page title\'s changed: \'' + src + '\' -> \'' + dst + '\'');
+        
+        ReactDOM.render(
+            <React.Fragment>
+                <CssBaseline />
+                <App header_data={msg.header} init_rows={msg.init_rows} addFunction={sendRow} setHeaderFunction={sendHeader}/>
+            </React.Fragment>, subRoot);
+        sendResponse("insert_tools");
+    }else if(msg.command && (msg.command === 'remove_tools')){
+        const target = document.getElementsByTagName('body')[0]
+        target.removeChild(subRoot);
+        sendResponse("remove_tools");
     }
 });

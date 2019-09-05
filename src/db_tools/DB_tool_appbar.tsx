@@ -83,7 +83,7 @@ class DB_tool_appbar extends React.Component<IDBAppbarProps, IDBAppbarState>{
                 </MenuItem>
               ))}
             </Menu>
-            <Typography variant="h6" className={classes.appbar_title} color="inherit">
+            <Typography variant="h6" className={classes.appbar_title} color="inherit" style={{backgroundColor: "#D3D3D300", color: 'white'}} >
               Web2DB
             </Typography>
             <a id="download" href="#" download="data.csv">

@@ -7,7 +7,6 @@ import TableRow from '@material-ui/core/TableRow';
 import { Rnd } from 'react-rnd';
 import Box from '@material-ui/core/Box';
 import common from '@material-ui/core/colors/common';
-import { CssBaseline } from '@material-ui/core';
 
 
 interface DB_tool_table_prop{
@@ -30,7 +29,7 @@ class DB_tool_table extends React.Component<DB_tool_table_prop> {
       justifyContent: "center",
       border: "solid 1px #ddd",
       background: "#f0f0f0",
-      zIndex: "100"
+      zIndex: "2147483647"
     };
     return (
         <Rnd
@@ -44,7 +43,7 @@ class DB_tool_table extends React.Component<DB_tool_table_prop> {
             }} 
           >
           <Box component="div" width="100%" height="100%" overflow="auto" bgcolor="background.paper">
-            <Table>
+            <Table style={{tableLayout: "fixed"}}>
               <TableHead>
                 <TableRow>
                   <TableCell style={{

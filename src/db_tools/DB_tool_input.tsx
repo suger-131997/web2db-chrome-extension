@@ -9,15 +9,14 @@ import { Button } from '@material-ui/core';
 import Box from '@material-ui/core/Box';
 import common from '@material-ui/core/colors/common';
 import { Rnd } from 'react-rnd';
-import { red } from '@material-ui/core/colors';
 
 interface DB_tool_input_prop{
     header_data: string[];
     pushDatum: (datum:{[key: string]: string;}) => void;
     textValues: {[key: string]: string;};
     textForcus: string;
-    chengeForcus: (target:string) => void;
     setText: (nextTextValues:{[key: string]: string;}) => void;
+    chengeForcus: (target:string) => void;
 }
 
 interface DB_tool_input_state{
@@ -29,29 +28,23 @@ class DB_tool_input extends React.Component<DB_tool_input_prop, DB_tool_input_st
 
     constructor(props:DB_tool_input_prop) {
         super(props);
-        this.changeText = this.changeText.bind(this)
-        this.onClickDBInputBtn = this.onClickDBInputBtn.bind(this)
-        this.setFocus = this.setFocus.bind(this)
-        this.nextFocus = this.nextFocus.bind(this)
-        this.keyPressAction = this.keyPressAction.bind(this)
-        this.createTextField = this.createTextField.bind(this)
+        this.changeText = this.changeText.bind(this);
+        this.onClickDBInputBtn = this.onClickDBInputBtn.bind(this);
+        this.setFocus = this.setFocus.bind(this);
+        this.nextFocus = this.nextFocus.bind(this);
+        this.keyPressAction = this.keyPressAction.bind(this);
+        this.createTextField = this.createTextField.bind(this);
         this.textInputs = {};
     }
 
     componentDidMount() {
-        // const elem = this.textInputs[this.props.textForcus];
-        // if(elem){
-        //     setTimeout(function(){
-        //         elem.focus();
-        //     },0);
-        // }
         this.rnd.updatePosition({x: 10, y: 230})
     }
 
     render(){
         const style: { [key: string]: string } = {
             position: "fixed",
-            zIndex: "100"
+            zIndex: "2147483647"
         };
         const btn_style: { [key: string]: string } = {
             top:'0',
@@ -64,7 +57,7 @@ class DB_tool_input extends React.Component<DB_tool_input_prop, DB_tool_input_st
                 x: 0,
                 y: 200,
                 width: 800,
-                height: 150
+                height: 160
               }}
               style={style} 
               ref={(rnd: Rnd) => { this.rnd = rnd} }
@@ -103,12 +96,12 @@ class DB_tool_input extends React.Component<DB_tool_input_prop, DB_tool_input_st
     }
 
     private createTextField(colume:string){
-        var color = "black";
+        var color = "white";
         if (colume == this.props.textForcus){
-            color = "blue"
+            color = "#CCFFFF"
         }
         const textfield_style: { [key: string]: string } = {
-            color: color
+            backgroundColor: color
         };
         return (
             <TableCell align="right">
@@ -124,14 +117,35 @@ class DB_tool_input extends React.Component<DB_tool_input_prop, DB_tool_input_st
             </TableCell>
         );
     }
+    
+    private keyPressAction(e:any){
+        if (e.key === 'Tab' || (e.key === 'x' && e.ctrlKey)) {
+            this.nextFocus()
+        }
+    }
 
     private setFocus(e:any){
         console.log(e.target.id)
         this.props.chengeForcus(e.target.id)
-        const elem = this.textInputs[this.props.textForcus];
-        setTimeout(function(){
-            elem.focus();
-        },0);
+
+        // 他のフィールドをフォーカスしてから戻す
+        if(e.target.id == this.props.textForcus){
+            var elem:HTMLInputElement;
+            for(var i = 0; i < this.props.header_data.length; i++){
+                if (this.props.header_data[i] !== this.props.textForcus){
+                    elem = this.textInputs[this.props.header_data[i]]
+                }
+            }
+            setTimeout(function(){
+                elem.focus();
+            },0);
+        }else{
+            const elem = this.textInputs[this.props.textForcus];
+            setTimeout(function(){
+                elem.focus();
+            },0);
+        }
+        
 
         const elem2 = this.textInputs[e.target.id];
         setTimeout(function(){
@@ -139,33 +153,24 @@ class DB_tool_input extends React.Component<DB_tool_input_prop, DB_tool_input_st
         },0);
     }
 
-    private keyPressAction(e:any){
-        // console.log(e.key)
-        if (e.key === 'c' && e.ctrlKey) {         
-            this.props.setText({"":"true"})
-        }else if (e.key === 'z' && e.ctrlKey) {
-            this.onClickDBInputBtn()
-        }else if (e.key === 'Tab' || (e.key === 'x' && e.ctrlKey)) {
-            this.nextFocus()
-        }
-    }
-
     private nextFocus(){
         var next = 0;
+        const current = document.activeElement;
         for(var i = 0; i < this.props.header_data.length; i++){
-            if (this.props.header_data[i] === this.props.textForcus){
-                next = i + 1;
+            if (this.textInputs[this.props.header_data[i]] === current){
+                break;
             }
+            next = i + 1;
         }
+        next = i + 1;
         if(next === this.props.header_data.length){
             next = 0;
         }
-        this.props.chengeForcus(this.props.header_data[next])
         const elem = this.textInputs[this.props.header_data[next]];
         setTimeout(function(){
             elem.focus();
         },0);
-    }
+      }
 
     private onClickDBInputBtn(){
         this.props.pushDatum(JSON.parse(JSON.stringify(this.props.textValues)))
@@ -175,6 +180,7 @@ class DB_tool_input extends React.Component<DB_tool_input_prop, DB_tool_input_st
         }
         this.props.setText(textValues);
     }
+
     private changeText(e:any) {
         var textValues = this.props.textValues;
         textValues[e.target.id] = e.target.value
