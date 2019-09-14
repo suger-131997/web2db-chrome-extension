@@ -27,8 +27,9 @@ function sendHeader(header:string[]){
 }
 
 chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
-    if (msg.command && (msg.command === 'insert_tools')) {
-        const target = document.getElementsByTagName('body')[0]
+    if (msg.command && (msg.command === 'insert_tools') && subRoot== null) {
+        console.log('insert_tools');
+        const target = document.getElementsByTagName('body')[0];
         subRoot = document.createElement('div');
         target.insertBefore(subRoot, target.firstChild)
         
@@ -38,9 +39,10 @@ chrome.runtime.onMessage.addListener(function(msg, sender, sendResponse) {
                 <App header_data={msg.header} init_rows={msg.init_rows} addFunction={sendRow} setHeaderFunction={sendHeader}/>
             </React.Fragment>, subRoot);
         sendResponse("insert_tools");
-    }else if(msg.command && (msg.command === 'remove_tools')){
+    }else if(msg.command && (msg.command === 'remove_tools') && subRoot != null){
         const target = document.getElementsByTagName('body')[0]
         target.removeChild(subRoot);
+        subRoot = null;
         sendResponse("remove_tools");
     }
 });

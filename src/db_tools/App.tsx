@@ -194,7 +194,7 @@ class App extends React.Component<IDBAppProps, IDBAppState>{
     for(var j = 0; j < this.state.rows.length; j++){
       for(var i = 0; i < this.state.header_data.length; i++){
         if(this.state.rows[j][this.state.header_data[i]]){
-          content +=  this.state.rows[j][this.state.header_data[i]] + ',';
+          content +=  "\"" + this.state.rows[j][this.state.header_data[i]] + '\",';
         }
       }
       content += "\n"

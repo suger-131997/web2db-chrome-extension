@@ -63,10 +63,15 @@ class DB_tool_appbar extends React.Component<IDBAppbarProps, IDBAppbarState>{
     var menuItems:string[] = ["使い方表示"];
     var menufuncs:Array<() => void> = [this.alertUse];
     //<div className={classes.toolbar} />  {/* #1 */}
+    const style: { [key: string]: string } = {
+      position: "fixed",
+      zIndex: "2147483647"
+    };
     return (
-        <div className={classes.appbar_root}>
-          <CssBaseline />
-          <AppBar position="sticky">
+      <div>
+        <CssBaseline />
+        <div className={classes.appbar_root} style={style}>
+          <AppBar position="fixed">
             <Toolbar>
             <IconButton edge="start" className={classes.appbar_menuButton} color="inherit" aria-label="Menu" onClick={this.handleClick}>
               <MenuIcon />
@@ -94,6 +99,8 @@ class DB_tool_appbar extends React.Component<IDBAppbarProps, IDBAppbarState>{
             </Toolbar>
           </AppBar>
         </div>
+        <div className={classes.toolbar} /> 
+      </div>
     );
   }
 }
